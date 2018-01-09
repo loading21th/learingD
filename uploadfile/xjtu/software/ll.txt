@@ -1,0 +1,31 @@
+<html>
+<head>
+<script type="text/javascript" src="/jquery/jquery.js"></script>
+<script>
+
+$(function()
+{
+    alert("A");
+});
+
+$(document).ready(function(){
+    alert("B");
+});
+
+jQuery(function($) {  
+    alert("C");  
+});
+
+function loads(){
+    alert("D");
+};
+
+window.onload=function(){
+    alert("E");
+};
+
+
+</script>
+<body onload="loads();">
+</body>
+</html>

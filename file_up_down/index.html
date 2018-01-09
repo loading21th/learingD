@@ -1,48 +1,55 @@
 <head>
     <meta http-equiv='Content-Type' content='text/html;charset=utf-8'>
     {% load staticfiles %}
-    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
-	<script>
-	    function file_upload()
-        {
-            var form_data = new FormData();
-            var file_name = document.getElementById('file_upload').files[0];
-            form_data.append('filename',file_name);
-            $.ajax({
-                type:'POST',
-                url :'/lytest/hlsroom/{{schoolname}}/{{classname}}/',
-                data:form_data, 
-                contentType:false,
-                processData:false,
-                mimeType:"multipart/form-data",
-                error:function()
-                {
-                    alert('请求失败');
-                },
-                success:function(arg)
-                {
-					val = JSON.parse(arg);
-					$('#upli').attr('href','/lytest/hlsroom/download/{{schoolname}}/{{classname}}/'+val.Courseware_name+'/');
-					$('#upli').html(val.Courseware_name);
-                }
-            });
-        }
-	</script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
 </head>
 
-<body height:100%>
+<body height:100% >
     <h1>Welcome {{schoolname}} school,and my class :{{classname}}</h1>
 	<div>
         <input type ='file' name='coursefile' id='file_upload' />
-    	<input type='submit' id='test'  onclick='file_upload()' value='Submit'/>
+    	<input type='submit' id='test'  onclick='file_upload("no")' value='Submit'/>
 	</div>
 <div class = 'row pre-scrollable'  style='height:500px;width:500px;overflow-x:scroll;overflow-y:scroll'>
-    <ul class = 'filelist'>
-
-        <li > <a id='upli' href='{% url 'download' schoolname classname courseware_name %}' >{{courseware_name}}</a></li>     
- 
-        <li> <a href='{% url 'add' schoolname classname sum %}' >{{sum}}</a></li> 
+    <ul class = 'filelist' id='upul'>
+        <li id='upli'> <a href='{% url 'add' schoolname classname sum %}' >{{sum}}</a></li> 
     </ul>
 </div>
 
 <body>
+<script>
+	function file_upload(is_index)
+    {
+        var form_data = new FormData();
+		if (is_index == "no")
+		{
+            var file_name = document.getElementById('file_upload').files[0];
+            form_data.append('filename',file_name);
+		}
+        $.ajax({
+            type:'POST',
+            url :'/lytest/hlsroom/{{schoolname}}/{{classname}}/',
+            data:form_data, 
+            contentType:false,
+            processData:false,
+            mimeType:"multipart/form-data",
+            error:function()
+            {
+                alert('请求失败');
+            },
+            success:function(arg)
+            {
+				val = JSON.parse(arg).Courseware_name;
+				$('#upul').empty();
+				for (var inode=0; inode<val.length; inode++)
+				{
+					$('#upul').append('<li id="upli"><a href="/lytest/hlsroom/download/{{schoolname}}/{{classname}}/'+val[inode]+'/" >'+val[inode]+'</a></li>');	
+				}
+   	        }
+        });
+    }
+	$(document).ready(function()
+		{
+			file_upload("yes");
+		});
+</script>
