@@ -18,8 +18,7 @@ from file_up_down import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^index/download/(.*)/$',views.download,name="download"),
-    url(r'^index/add/(.*)/$',views.add,name="add"),
-    url(r'^index$',views.upload),
-    url(r'^index.html$',views.upload),
+    url(r'^lytest/hlsroom/download/(.*)/(.*)/(.*)/$',views.download,name="download"),
+    url(r'^lytest/hlsroom/add/(.*)/(.*)/(.*)/$',views.add,name="add"),
+    url(r'^lytest/hlsroom/(.*)/(.*)/$',views.hlsroompage),
 ]
