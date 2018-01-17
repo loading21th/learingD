@@ -19,18 +19,18 @@ def hlsroompage(request,schoolname,classname):
         upload_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),'uploadfile',schoolname,classname)
         if not os.path.exists(upload_path):
             os.makedirs(upload_path)
-	if request.FILES:
+        if request.FILES:
             file_obj = request.FILES.getlist('filename')[0]
             with open(os.path.join(upload_path,file_obj.name), 'wb') as newfile:
                 for chunk in file_obj.chunks():
                     newfile.write(chunk)
-	hlsdic = {'Courseware_name':os.listdir(upload_path)}
-	response = JsonResponse(hlsdic, safe=False)
-	response["Access-Control-Allow-Origin"] = "*"
-	response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-	response["Access-Control-Max-Age"] = "1000"
-	response["Access-Control-Allow-Headers"] = "*"
-	return response
+        hlsdic = {'Courseware_name':os.listdir(upload_path)}
+        response = JsonResponse(hlsdic, safe=False)
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+        response["Access-Control-Max-Age"] = "1000"
+        response["Access-Control-Allow-Headers"] = "*"
+        return response
     else:
         hlsdic = {'schoolname':schoolname,'classname':classname,'sum':3}
         return render(request,'index.html',hlsdic);
@@ -38,11 +38,11 @@ def hlsroompage(request,schoolname,classname):
 
 def download(request,schoolname,classname,filename):
     fullpath = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),'uploadfile',schoolname,classname,filename)
-    ffile = open(fullpath)
+    ffile = open(fullpath,'rb')
     response = FileResponse(ffile)
+    print(filename)
     response['Content-Type'] = "application/octet-stream"
-    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(filename.encode('utf-8'))
-    print 'ok'
+    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(filename)
     return response 
 
 def add(request,schoolname,classname,a):
